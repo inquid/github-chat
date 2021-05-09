@@ -1,6 +1,7 @@
 <!-- The core Firebase JS SDK is always required and must be listed first -->
-<script src="https://www.gstatic.com/firebasejs/6.6.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/6.6.1/firebase-database.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.5.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.5.0/firebase-database.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.5.0/firebase-firestore.js"></script>
 
 <link rel="stylesheet" href="css/normalize.css">
 
@@ -26,6 +27,8 @@
   };
   // Initialize Firebase
   firebase.initializeApp(firebaseConfig);
+  var db = firebase.firestore();
+
 
   firebase.database().ref("messages").on("child_removed", function (snapshot) {
     document.getElementById("message-" + snapshot.key).innerHTML = "This message has been deleted";
@@ -33,15 +36,29 @@
 
   function deleteMessage(self) {
     var messageId = self.getAttribute("data-id");
-    firebase.database().ref("messages").child(messageId).remove();
+
+    db.collection("messages").doc(messageId).delete().then(() => {
+        console.log("Document successfully deleted!");
+    }).catch((error) => {
+        console.error("Error removing document: ", error);
+    });
   }
 
   function sendMessage() {
     var message = document.getElementById("message").value;
-    firebase.database().ref("messages").push().set({
-      "message": message,
-      "sender": myName
+
+    db.collection("messages").add({
+        message: message,
+        sender: myName
+    })
+    .then((docRef) => {
+        console.log("Document written with ID: ", docRef.id);
+        document.getElementById("message").value = "";
+    })
+    .catch((error) => {
+        console.error("Error adding document: ", error);
     });
+
     return false;
   }
 </script>
@@ -80,7 +97,7 @@
 <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.3/jquery.mCustomScrollbar.concat.min.js'></script>
 
-        <script src="js/index.js?v=<?= time(); ?>"></script>
+        <script src="js/index.js"></script>
 
 <style>
     .fixed-bottom {
