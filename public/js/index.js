@@ -5,16 +5,22 @@ var $messages = $('.messages-content'),
 var myName = "";
 
 $(window).load(function() {
-  myName = prompt("Enter your name");
+  if(localStorage.getItem('myName')){
+    myName = localStorage.getItem('myName');
+  }else{
+    myName = prompt("Enter your name");
+    localStorage.setItem("myName", myName);
+  }
+  
   $messages.mCustomScrollbar();
 
   db.collection("messages").onSnapshot((querySnapshot) => {
     querySnapshot.forEach((doc) => {
         if (doc.data().sender == myName) {
-          $('<div class="message message-personal"><figure class="avatar"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQpdX6tPX96Zk00S47LcCYAdoFK8INeCElPeJrVDrh8phAGqUZP_g" /></figure><div id="message-' + doc.id + '">' + doc.data().message + '<button class="btn-delete" data-id="' + doc.id + '" onclick="deleteMessage(this);">Delete</button></div></div>').appendTo($('.mCSB_container')).addClass('new');
+          $('<div class="message message-personal"><b class="user-name">'+doc.data().sender+'</b><figure class="avatar"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQpdX6tPX96Zk00S47LcCYAdoFK8INeCElPeJrVDrh8phAGqUZP_g" /></figure><div id="message-' + doc.id + '">' + doc.data().message + ' <button class="btn-delete" data-id="' + doc.id + '" onclick="deleteMessage(this);">🗑</button></div></div>').appendTo($('.mCSB_container')).addClass('new');
           $('.message-input').val(null);
         } else {
-          $('<div class="message new"><figure class="avatar"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQpdX6tPX96Zk00S47LcCYAdoFK8INeCElPeJrVDrh8phAGqUZP_g" /></figure><div id="message-' + doc.id + '">' + doc.data().sender + ': ' + doc.data().message + '</div></div>').appendTo($('.mCSB_container')).addClass('new');
+          $('<div class="message new"><b class="user-name">'+doc.data().sender+'</b><figure class="avatar"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQpdX6tPX96Zk00S47LcCYAdoFK8INeCElPeJrVDrh8phAGqUZP_g" /></figure><div id="message-' + doc.id + '">' + doc.data().message + '</div></div>').appendTo($('.mCSB_container')).addClass('new');
         }
     });
     

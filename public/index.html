@@ -9,6 +9,7 @@
 <link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.3/jquery.mCustomScrollbar.min.css'>
 
         <link rel="stylesheet" href="css/style.css">
+        <title>Quentia Chat</title>
 
 <!-- TODO: Add SDKs for Firebase products that you want to use
      https://firebase.google.com/docs/web/setup#config-web-app -->
@@ -63,56 +64,33 @@
   }
 </script>
 
-<style>
-  figure.avatar {
-    bottom: 0px !important;
-  }
-  .btn-delete {
-    background: red;
-    color: white;
-    border: none;
-    margin-left: 10px;
-    border-radius: 5px;
-  }
-</style>
-
 <div class="chat">
   <div class="chat-title">
-    <h1>Chat Room</h1>
-    <h2>Firebase</h2>
+    <h1>Quentia Chat</h1>
+    <h2>Dress marketplace 👗</h2>
     <figure class="avatar">
-      <img src="https://p7.hiclipart.com/preview/349/273/275/livechat-online-chat-computer-icons-chat-room-web-chat-others.jpg" /></figure>
+      <img src="https://quentia.mx/img/Logo.png" /></figure>
   </div>
   <div class="messages">
     <div class="messages-content"></div>
   </div>
   <div class="message-box">
-    <textarea type="text" class="message-input" id="message" placeholder="Type message..."></textarea>
-    <button type="submit" class="message-submit">Send</button>
+    <textarea type="text" class="message-input" id="message" placeholder="Escribe tu mensaje..."></textarea>
+    <div class='button-container'>
+      <button>📎</button>
+      <input type="file" id="attachment" name="filename">
+    </div>
+    <button onclick="sendMessage()" class="send-button"><img class="send-button" src="icons/send.png"/></button>
   </div>
 
 </div>
 <div class="bg"></div>
 
-<script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.3/jquery.mCustomScrollbar.concat.min.js'></script>
 
         <script src="js/index.js"></script>
 
-<style>
-    .fixed-bottom {
-        position: fixed;
-        left: 0;
-        bottom: 0;
-        width: 100%;
-        background-color: lightseagreen;
-        color: white;
-        text-align: center;
-        padding: 25px;
-        font-size: 20px;
-    }
-</style>
-
 <div class="footer fixed-bottom">
-    Inquid
+    Quentia
 </div>
