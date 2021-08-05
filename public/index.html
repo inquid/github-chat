@@ -29,6 +29,7 @@
   // Initialize Firebase
   firebase.initializeApp(firebaseConfig);
   var db = firebase.firestore();
+  let chat_title = 'Vestido No. 234';
 
 
   firebase.database().ref("messages").on("child_removed", function (snapshot) {
@@ -50,7 +51,8 @@
 
     db.collection("messages").add({
         message: message,
-        sender: myName
+        sender: myName,
+        created_at: firebase.firestore.FieldValue.serverTimestamp(),
     })
     .then((docRef) => {
         console.log("Document written with ID: ", docRef.id);
@@ -66,10 +68,10 @@
 
 <div class="chat">
   <div class="chat-title">
-    <h1>Quentia Chat</h1>
+    <h1 id="chat_title_id">Vestido 234</h1>
     <h2>Dress marketplace 👗</h2>
     <figure class="avatar">
-      <img src="https://quentia.mx/img/Logo.png" /></figure>
+      <img src="https://images-na.ssl-images-amazon.com/images/I/71vJ6Jj-IqL._AC_UL1500_.jpg" /></figure>
   </div>
   <div class="messages">
     <div class="messages-content"></div>
@@ -78,7 +80,7 @@
     <textarea type="text" class="message-input" id="message" placeholder="Escribe tu mensaje..."></textarea>
     <div class='button-container'>
       <button>📎</button>
-      <input type="file" id="attachment" name="filename">
+      <input type="file" id="attachment" name="filename" onchange="uploadAttachment()">
     </div>
     <button onclick="sendMessage()" class="send-button"><img class="send-button" src="icons/send.png"/></button>
   </div>
