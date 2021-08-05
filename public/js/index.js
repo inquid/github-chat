@@ -1,74 +1,74 @@
-var $messages = $('.messages-content'),
-    d, h, m,
-    i = 0;
+const $messages = $('.messages-content');
+let d, h, m;
+const i = 0;
 
-var myName = "";
+let myName = "";
 
-$(window).load(function() {
-  if(localStorage.getItem('myName')){
-    myName = localStorage.getItem('myName');
-  }else{
-    myName = prompt("Enter your name");
-    localStorage.setItem("myName", myName);
-  }
-  $('.messages-content').val = '';
+$(window).load(function () {
+    if (localStorage.getItem('myName')) {
+        myName = localStorage.getItem('myName');
+    } else {
+        myName = prompt("Enter your name");
+        localStorage.setItem("myName", myName);
+    }
+    $('.messages-content').val = '';
 
-  $messages.mCustomScrollbar();
-  updateScrollbar();
-
-  db.collection("messages")
-  .orderBy('created_at')
-  .onSnapshot((querySnapshot) => {
-    querySnapshot.forEach((doc) => {
-        if (doc.data().sender == myName) {
-          $('<div class="message message-personal"><b class="user-name">'+doc.data().sender+'</b><figure class="avatar"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQpdX6tPX96Zk00S47LcCYAdoFK8INeCElPeJrVDrh8phAGqUZP_g" /></figure><div id="message-' + doc.id + '">' + doc.data().message + ' <button class="btn-delete" data-id="' + doc.id + '" onclick="deleteMessage(this);">🗑</button></div></div>').appendTo($('.mCSB_container')).addClass('new');
-          $('.message-input').val(null);
-        } else {
-          $('#chat_title_id').val(doc.data().sender);
-          $('<div class="message new"><b class="user-name">'+doc.data().sender+'</b><figure class="avatar"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQpdX6tPX96Zk00S47LcCYAdoFK8INeCElPeJrVDrh8phAGqUZP_g" /></figure><div id="message-' + doc.id + '">' + doc.data().message + '</div></div>').appendTo($('.mCSB_container')).addClass('new');
-        }
-    });
+    $messages.mCustomScrollbar();
     updateScrollbar();
-    setDate();
-  });
+
+    db.collection("messages")
+        .orderBy('created_at')
+        .onSnapshot((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                if (doc.data().sender == myName) {
+                    $('<div class="message message-personal"><b class="user-name">' + doc.data().sender + '</b><figure class="avatar"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQpdX6tPX96Zk00S47LcCYAdoFK8INeCElPeJrVDrh8phAGqUZP_g" /></figure><div id="message-' + doc.id + '">' + doc.data().message + ' <button class="btn-delete" data-id="' + doc.id + '" onclick="deleteMessage(this);">🗑</button></div></div>').appendTo($('.mCSB_container')).addClass('new');
+                    $('.message-input').val(null);
+                } else {
+                    $('#chat_title_id').val(doc.data().sender);
+                    $('<div class="message new"><b class="user-name">' + doc.data().sender + '</b><figure class="avatar"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQpdX6tPX96Zk00S47LcCYAdoFK8INeCElPeJrVDrh8phAGqUZP_g" /></figure><div id="message-' + doc.id + '">' + doc.data().message + '</div></div>').appendTo($('.mCSB_container')).addClass('new');
+                }
+            });
+            updateScrollbar();
+            setDate();
+        });
 
 });
 
 function uploadAttachment() {
-  
+    alert('upload attachment');
 }
 
 function updateScrollbar() {
-  $messages.mCustomScrollbar("update").mCustomScrollbar('scrollTo', 'bottom', {
-    scrollInertia: 10,
-    timeout: 0
-  });
+    $messages.mCustomScrollbar("update").mCustomScrollbar('scrollTo', 'bottom', {
+        scrollInertia: 10,
+        timeout: 0
+    });
 }
 
-function setDate(){
-  d = new Date()
-  if (m != d.getMinutes()) {
-    m = d.getMinutes();
-    $('<div class="timestamp">' + d.getHours() + ':' + m + '</div>').appendTo($('.message:last'));
-  }
+function setDate() {
+    d = new Date()
+    if (m != d.getMinutes()) {
+        m = d.getMinutes();
+        $('<div class="timestamp">' + d.getHours() + ':' + m + '</div>').appendTo($('.message:last'));
+    }
 }
 
 function insertMessage() {
-  msg = $('.message-input').val();
-  if ($.trim(msg) == '') {
-    return false;
-  }
+    msg = $('.message-input').val();
+    if ($.trim(msg) == '') {
+        return false;
+    }
 
-  sendMessage();
+    sendMessage();
 }
 
-$('.message-submit').click(function() {
-  insertMessage();
+$('.message-submit').click(function () {
+    insertMessage();
 });
 
-$(window).on('keydown', function(e) {
-  if (e.which == 13) {
-    insertMessage();
-    return false;
-  }
+$(window).on('keydown', function (e) {
+    if (e.which == 13) {
+        insertMessage();
+        return false;
+    }
 });
