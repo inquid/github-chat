@@ -4,6 +4,20 @@ const i = 0;
 
 let myName = "";
 
+const chat_app = new Vue({
+    el: '#chat_app',
+    data() {
+        return {
+            hello: 'Hello Vue!',
+            messages: [],
+        }
+    },
+    methods: {
+        loadMessages: function () {
+
+        },
+    },
+});
 $(window).load(function () {
     if (localStorage.getItem('myName')) {
         myName = localStorage.getItem('myName');
@@ -15,23 +29,18 @@ $(window).load(function () {
 
     $messages.mCustomScrollbar();
     updateScrollbar();
+    console.log(this);
 
     db.collection("messages")
         .orderBy('created_at')
         .onSnapshot((querySnapshot) => {
+            chat_app.messages = [];
             querySnapshot.forEach((doc) => {
-                if (doc.data().sender == myName) {
-                    $('<div class="message message-personal"><b class="user-name">' + doc.data().sender + '</b><figure class="avatar"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQpdX6tPX96Zk00S47LcCYAdoFK8INeCElPeJrVDrh8phAGqUZP_g" /></figure><div id="message-' + doc.id + '">' + doc.data().message + ' <button class="btn-delete" data-id="' + doc.id + '" onclick="deleteMessage(this);">🗑</button></div></div>').appendTo($('.mCSB_container')).addClass('new');
-                    $('.message-input').val(null);
-                } else {
-                    $('#chat_title_id').val(doc.data().sender);
-                    $('<div class="message new"><b class="user-name">' + doc.data().sender + '</b><figure class="avatar"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQpdX6tPX96Zk00S47LcCYAdoFK8INeCElPeJrVDrh8phAGqUZP_g" /></figure><div id="message-' + doc.id + '">' + doc.data().message + '</div></div>').appendTo($('.mCSB_container')).addClass('new');
-                }
+                chat_app.messages.push(doc);
             });
             updateScrollbar();
             setDate();
         });
-
 });
 
 function uploadAttachment() {
@@ -39,10 +48,8 @@ function uploadAttachment() {
 }
 
 function updateScrollbar() {
-    $messages.mCustomScrollbar("update").mCustomScrollbar('scrollTo', 'bottom', {
-        scrollInertia: 10,
-        timeout: 0
-    });
+    const messageBody = document.querySelector('.messages');
+    messageBody.scrollTop = messageBody.scrollHeight - messageBody.clientHeight;
 }
 
 function setDate() {
