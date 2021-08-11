@@ -107,6 +107,11 @@ body {
     width: 100%;
 }
 
+::-webkit-scrollbar {
+    width: 0;
+    background: transparent; /* make scrollbar transparent */
+}
+
 .messages .messages-content {
     position: absolute;
     top: 0;
