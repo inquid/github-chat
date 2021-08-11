@@ -2,6 +2,7 @@
 <!-- The core Firebase JS SDK is always required and must be listed first -->
 <script src="https://www.gstatic.com/firebasejs/8.5.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.5.0/firebase-database.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.5.0/firebase-storage.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.5.0/firebase-firestore.js"></script>
 
 <link rel="stylesheet" href="css/normalize.css">
@@ -30,8 +31,7 @@
     // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
     let db = firebase.firestore();
-    let chat_title = 'Vestido No. 234';
-
+    let storage = firebase.storage().ref();
 
     firebase.database().ref("messages").on("child_removed", function (snapshot) {
         document.getElementById("message-" + snapshot.key).innerHTML = "This message has been deleted";
@@ -49,10 +49,18 @@
 
     function sendMessage() {
         let message = document.getElementById("message").value;
+        let fileId = null;
+
+        if (document.getElementById('attachment').files !== null) {
+            storage.child('file.png').put(document.getElementById('attachment').files).then((snapshot) => {
+                fileId = snapshot.id;
+            });
+        }
 
         db.collection("messages").add({
             message: message,
             sender: myName,
+            attachment: fileId,
             created_at: firebase.firestore.FieldValue.serverTimestamp(),
         })
             .then((docRef) => {
@@ -67,33 +75,41 @@
     }
 </script>
 <div id="chat_app">
-<div class="chat">
-    <div class="chat-title">
-        <h1 id="chat_title_id">{{ hello }}</h1>
-        <h2>Dress marketplace 👗</h2>
-        <figure class="avatar">
-            <img src="https://images-na.ssl-images-amazon.com/images/I/71vJ6Jj-IqL._AC_UL1500_.jpg"/></figure>
-    </div>
-    <div class="messages">
-        <div class="messages-content">
-            <div v-for="doc in messages">
-                <div class="message message-personal">
-                    <b class="user-name">{{ doc.data().sender }}</b><figure class="avatar"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQpdX6tPX96Zk00S47LcCYAdoFK8INeCElPeJrVDrh8phAGqUZP_g" /></figure><div id="message-' + doc.id + '">{{ doc.data().message }}<button class="btn-delete" data-id="doc.id" onclick="deleteMessage(this);">🗑</button></div>
+    <div class="chat">
+        <div class="chat-title">
+            <h1 id="chat_title_id">{{ hello }}</h1>
+            <h2>Dress marketplace 👗</h2>
+            <figure class="avatar">
+                <img src="https://images-na.ssl-images-amazon.com/images/I/71vJ6Jj-IqL._AC_UL1500_.jpg"/></figure>
+        </div>
+        <div class="messages">
+            <div class="messages-content">
+                <div v-for="doc in messages">
+                    <div class="message message-personal">
+                        <b class="user-name">{{ doc.data().sender }}</b>
+                        <figure class="avatar"><img
+                                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQpdX6tPX96Zk00S47LcCYAdoFK8INeCElPeJrVDrh8phAGqUZP_g"/>
+                        </figure>
+                        <div id="message-' + doc.id + '">{{ doc.data().message }}
+                            <button v-if="true" class="btn-delete" data-id="doc.id" onclick="deleteMessage(this);">🗑
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="message-box">
-        <textarea type="text" class="message-input" id="message" placeholder="Escribe tu mensaje..."></textarea>
-        <div class='button-container'>
-            <button>📎</button>
-            <input type="file" id="attachment" name="filename" onchange="uploadAttachment()">
+        <div class="message-box">
+            <textarea type="text" class="message-input" id="message" placeholder="Escribe tu mensaje..."></textarea>
+            <div class='button-container'>
+                <button>📎</button>
+                <input type="file" id="attachment" name="filename" onchange="uploadAttachment()">
+            </div>
+            <button onclick="insertMessage()" class="send-button"><img class="send-button" src="icons/send.png"/>
+            </button>
         </div>
-        <button onclick="insertMessage()" class="send-button"><img class="send-button" src="icons/send.png"/></button>
-    </div>
 
-</div>
-<div class="bg"></div>
+    </div>
+    <div class="bg"></div>
 </div>
 
 <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>

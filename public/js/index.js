@@ -3,6 +3,7 @@ let d, h, m;
 const i = 0;
 
 let myName = "";
+let image = null;
 
 const chat_app = new Vue({
     el: '#chat_app',
@@ -44,7 +45,7 @@ $(window).load(function () {
 });
 
 function uploadAttachment() {
-    alert('upload attachment');
+    this.image = document.getElementById('attachment').files;
 }
 
 function updateScrollbar() {
